@@ -1,0 +1,28 @@
+{
+  "name": "cupola-server-node",
+  "version": "1.0.0",
+  "description": "The server side of Cupola",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha spec",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsyllu/cupola-server-node.git"
+  },
+  "keywords": [
+    "node.js"
+  ],
+  "author": "Hoating Qiu, Yuan (Jessica)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsyllu/cupola-server-node/issues"
+  },
+  "homepage": "https://github.com/jsyllu/cupola-server-node#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  }
+}
