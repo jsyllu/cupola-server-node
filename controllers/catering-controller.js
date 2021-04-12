@@ -14,6 +14,7 @@ module.exports = (app) => {
         .then(json => res.send(json))
         .catch(e => {
             console.log(e.message)
+            res.send(e.message)
             res.send([])
         })
     })
