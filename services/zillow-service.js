@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const fetch = require("node-fetch")
 
 const URL = process.env["REACT_APP_CUPOLA_URL"]
 const API_KEY = process.env["REACT_APP_CUPOLA_API_KEY"]
@@ -84,8 +84,6 @@ const getPropertyImages = async (params) => {
     return response.json()
 }
 
-const zillowService = {
+module.exports = {
     getPropertyByFilters, getPropertyDetail, getPropertyImages
 }
-
-module.exports = { zillowService }

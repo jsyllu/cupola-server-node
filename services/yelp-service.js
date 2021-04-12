@@ -1,4 +1,5 @@
 const fetch = require("node-fetch")
+
 const URL = process.env["REACT_APP_CUPOLA_YELP_URL"]
 const API_KEY = process.env["REACT_APP_CUPOLA_YELP_API_KEY"]
 
@@ -46,7 +47,6 @@ const getBusinesses = async (params) => {
  */
 const getBuisnessDetail = async (bid) => {
     let endPoint = getEndPointHelper(`businesses/${bid}`, {})
-
     let response = await fetch(endPoint, {
         method : "GET",
         headers : {
