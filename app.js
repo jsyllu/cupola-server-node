@@ -4,7 +4,7 @@ const app = express()
 const cors = require('cors')
 
 const corsOptions = {
-    origin: 'https://cupola.herokuapp.com',
+    origin: 'http://cupola.herokuapp.com',
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     methods: ['GET', 'PUT', 'POST', "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "X-Requested-With", "Origin"]
