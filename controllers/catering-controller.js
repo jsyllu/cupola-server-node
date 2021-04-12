@@ -14,8 +14,7 @@ module.exports = (app) => {
         .then(json => res.send(json))
         .catch(e => {
             console.log(e.message)
-            res.send(e.message)
-            res.send([])
+            res.status(404).send(e.message);
         })
     })
     /**
@@ -27,8 +26,7 @@ module.exports = (app) => {
         data
         .then(json => res.send(json))
         .catch(e => {
-            console.log(e.message)
-            res.send([])
+            res.status(404).send(e.message);
         })
     })
 }
