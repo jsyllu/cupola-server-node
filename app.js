@@ -3,19 +3,19 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require("mongoose")
+// connect db
 mongoose.connect(process.env["MONGODB_URI"], {useNewUrlParser: true, useUnifiedTopology: true});
 
+// confiugre middlewares
+// configure CORS
 const corsOptions = {
-    origin: '127.0.0.1',
+    origin: 'https://cupola.herokuapp.com/',
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     methods: ['GET', 'PUT', 'POST', "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "X-Requested-With", "Origin"]
 }
 
 app.use(cors(corsOptions))
-
-// confiugre middlewares
-// configure CORS
 // app.use((req, res, next) => {
 //     res.header('Access-Control-Allow-Origin', '*')
 //     res.header('Access-Control-Allow-Headers',

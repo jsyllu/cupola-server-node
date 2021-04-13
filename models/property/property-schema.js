@@ -6,7 +6,8 @@ const propertyTypes = require("./property-type/property-type-enum")
 const propertySchema = mongoose.Schema({
     uid : {
         type : mongoose.Types.ObjectId,
-        ref : "CustomerModel"
+        ref : "CustomerModel",
+        required : true
     },
     location : propertyLocationSchema,
     type : {
