@@ -6,7 +6,7 @@ const mongoose = require("mongoose")
 mongoose.connect(process.env["MONGODB_URI"], {useNewUrlParser: true, useUnifiedTopology: true});
 
 const corsOptions = {
-    origin: '127.0. 0.1',
+    origin: '127.0.0.1',
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     methods: ['GET', 'PUT', 'POST', "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "X-Requested-With", "Origin"]
