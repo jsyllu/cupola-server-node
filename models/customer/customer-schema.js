@@ -4,7 +4,6 @@ const lenderProfileSchema = require("./lender-profile/lender-profile-schema")
 const sellerProfileSchema = require("./seller-profile/seller-profile-schema")
 const tenantProfileSchema = require("./tenant-profile/tenant-profile-schema")
 const customerSchema = mongoose.Schema({
-    _id : mongoose.Types.ObjectId,
     firstName : String,
     lastName : String,
     phone : Number,
