@@ -1,3 +1,3 @@
-const propertyTypes = ["Apartment", "Condo", "House", "TownHouse"]
+const propertyTypes = ["Apartments", "Condos", "Houses", "Townhomes", "LotsLand", "Multi-family", 'Manufactured']
 
 module.exports = propertyTypes

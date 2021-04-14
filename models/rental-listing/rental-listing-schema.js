@@ -1,14 +1,22 @@
+// https://mongoosejs.com/docs/api.html#schematype_SchemaType-ref
+const PropertyModel = require("../property/property-model")
 const mongoose = require("mongoose")
 const currencies = require("../currency/currency-enum")
 
 const rentalListingSchema = mongoose.Schema({
     pid : {
         type : mongoose.Types.ObjectId,
-        ref : "PropertyModel",
+        ref : PropertyModel,
         require : true
     },
-    createdAt : Date,
-    updatedAt : Date,
+    createdAt : {
+        type : Date,
+        default : new Date()
+    },
+    updatedAt : {
+        type : Date,
+        default : new Date()
+    },
     monthlyRent : Number,
     currency : {
         type : String,
