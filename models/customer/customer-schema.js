@@ -9,6 +9,10 @@ const customerSchema = mongoose.Schema({
     lastName : String,
     phone : Number,
     email : String,
+    password : {
+        type : String,
+        required : true
+    },
     buyerProfile : buyerProfileSchema,
     lenderProfile : lenderProfileSchema,
     sellerProfile : sellerProfileSchema,
