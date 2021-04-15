@@ -4,6 +4,7 @@ const app = express()
 const cors = require('cors')
 const mongoose = require("mongoose")
 // connect db
+mongoose.set('useFindAndModify', false)
 mongoose.connect(process.env["MONGODB_URI"], {useNewUrlParser: true, useUnifiedTopology: true});
 
 // confiugre middlewares

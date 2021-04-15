@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
 const currencies = require("../currency/currency-enum")
-const PropertyModel = require("../property/property-model")
+const propertyModel = require("../property/property-model")
 
 const saleListingSchema = mongoose.Schema({
     pid : {
-        type : mongoose.Types.ObjectId,
-        ref : PropertyModel,
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "propertyModel",
         require : true
     },
     createdAt : {

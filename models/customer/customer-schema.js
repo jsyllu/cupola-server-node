@@ -19,7 +19,7 @@ const customerSchema = mongoose.Schema({
     buyerProfile : buyerProfileSchema,
     lenderProfile : lenderProfileSchema,
     sellerProfile : sellerProfileSchema,
-    tenantProfile : tenantProfileSchema
+    tenantProfile : tenantProfileSchema,
 }, {collection : "customers"})
 
 module.exports = customerSchema

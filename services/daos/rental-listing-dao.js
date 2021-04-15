@@ -1,4 +1,3 @@
-const propertyModel = require("../../models/property/property-model")
 const rentalListingModel = require("../../models/rental-listing/rental-listing-model")
 
 /**

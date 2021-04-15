@@ -1,15 +1,15 @@
 const mongoose = require("mongoose")
 const status = require("../status/status-enum")
-const CustomerModel = require("../customer/customer-model")
+const customerModel = require("../customer/customer-model")
 
 const bidSchema = mongoose.Schema({
     buyerId : {
-        type : mongoose.Types.ObjectId,
-        ref : CustomerModel
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "customerModel"
     },
     sellerId : {
-        type : mongoose.Types.ObjectId,
-        ref : CustomerModel
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "customerModel"
     },
     createdAt : {
         type : Date,
