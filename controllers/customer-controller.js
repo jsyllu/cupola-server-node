@@ -29,7 +29,7 @@ module.exports = (app) => {
         
         customerService.createCustomer(data, (err, data) => {
             if (!err)
-                res.status(200).send(data["_id"])
+                res.status(200).send(data)
             else 
                 res.status(404).send(err.message)
         })
@@ -45,7 +45,7 @@ module.exports = (app) => {
         // save the data to the database
         customerService.updateCustomer(data, (err, data) => {
             if (!err)
-                res.status(200).send(data["_id"])
+                res.status(200).send(data)
             else 
                 res.status(404).send(err.message)            
         })
