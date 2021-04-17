@@ -9,23 +9,23 @@ const propertySchema = mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "customerModel",
         required : true
-    },
+    }, // 607895710da0953e57c44f52
     location : propertyLocationSchema,
     type : {
         type : String,
         enum : propertyTypes
-    },
-    size : Number,
-    beds : Number,
-    baths : Number,
-    yearBuilt : Number,
-    hasBasement : Boolean,
-    hasParking : Boolean,
-    hasHeating : Boolean,
-    hasAC : Boolean,
-    gallery : [String], // image urls
-    zillowId : String,
-    transactionHistory : [propertyTransactionShcema]
+    }, // homeType
+    size : Number,  // livingArea
+    beds : Number, // bedrooms
+    baths : Number, // bathrooms
+    yearBuilt : Number, // yearBuilt
+    hasBasement : Boolean, // basement !=== undefined || basement !== null
+    hasParking : Boolean, // parking (number)
+    hasHeating : Boolean, // hasHeating
+    hasAC : Boolean, // hasCooling === true
+    gallery : [String], // image urls - another zilllowApi call object.images
+    zillowId : String, // zpid
+    transactionHistory : [propertyTransactionShcema] // undefined
 })
 
 module.exports = propertySchema

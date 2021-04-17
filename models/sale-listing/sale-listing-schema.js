@@ -16,11 +16,11 @@ const saleListingSchema = mongoose.Schema({
         type : Date,
         default : new Date()
     },
-    price : Number,
+    price : Number, // price
     currency : {
         type : String,
         enum : currencies
-    }
+    } // USD
 }, {collection : "saleListings"})
 
 module.exports = saleListingSchema

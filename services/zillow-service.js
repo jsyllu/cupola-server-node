@@ -57,8 +57,10 @@ const getPropertyDetail = async (params) => {
             "x-rapidapi-host" : API_HOST
         }
     })
+
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        console.log(response)
+        throw new Error(`HTTP error! status: ${response.statusText}`)
     }
     return response.json()
 }
