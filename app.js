@@ -1,16 +1,25 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
+const port = process.env.PORT || 3001
 const cors = require('cors')
 const mongoose = require("mongoose")
 // connect db
 mongoose.set('useFindAndModify', false)
-mongoose.connect(process.env["MONGODB_URI"], {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env["MONGODB_URI"],
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log('Connected to mongodb atlas successfully'))
+    .catch(err => console.log(err))
 
-// confiugre middlewares
+// configure middlewares
 // configure CORS
 const corsOptions = {
-    origin: 'https://cupola.herokuapp.com/',
+    origin: '*'
+        // ['https://cupola.herokuapp.com/', 'http://localhost:3000/', '*']
+    ,
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     methods: ['GET', 'PUT', 'POST', "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "X-Requested-With", "Origin"]
@@ -33,9 +42,8 @@ require('./controllers/catering-controller')(app)
 require('./controllers/customer-controller')(app)
 require("./controllers/listing-controller")(app)
 
-
 app.get("/", (req, res) => {
-    res.send("Hello, World")
+    res.send("Hello, Cupola")
 })
 
 app.get("/test", (req, res) => {
@@ -48,4 +56,4 @@ app.post("/test", (req, res) => {
     res.send(data)
 })
 
-app.listen(process.env.PORT || 3000)
+app.listen(port, () => console.log(`Cupola app listening on port ${port}!`))
