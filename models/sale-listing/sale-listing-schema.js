@@ -20,10 +20,7 @@ const saleListingSchema = mongoose.Schema({
     currency : {
         type : String,
         enum : currencies
-    },
-    hoa : Number,
-    certificateOfOwnership : String,
-    ownership : Boolean
+    }
 }, {collection : "saleListings"})
 
 module.exports = saleListingSchema

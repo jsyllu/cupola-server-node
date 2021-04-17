@@ -31,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 // import controllers
 require('./controllers/catering-controller')(app)
 require('./controllers/customer-controller')(app)
+require("./controllers/listing-controller")(app)
 
 
 app.get("/", (req, res) => {
