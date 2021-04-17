@@ -49,13 +49,6 @@ module.exports = (app) => {
         // else, retreieve from the zillowApi and store to db
     })
 
-    app.get('/zillow/:zpid', (req, res) => {
-        const zpid = req.params.zpid
-        zillowService.getPropertyDetail({
-            zpid
-        }).then(data => res.json(data))
-    })
-
     /**
      * Get list of properties for rent
      */
@@ -90,5 +83,12 @@ module.exports = (app) => {
         // check if db has data for this location
         // if exist, retreieve from db
         // else, retreieve from the zillowApi and store to db
-    }) 
+    })
+    
+    app.get('/zillow/:zpid', (req, res) => {
+        const zpid = req.params.zpid
+        zillowService.getPropertyDetail({
+            zpid
+        }).then(data => res.json(data))
+    })
 }
