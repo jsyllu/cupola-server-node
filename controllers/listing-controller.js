@@ -39,5 +39,23 @@ module.exports = (app) => {
         // check if db has data for this location
         // if exist, retreieve from db
         // else, retreieve from the zillowApi and store to db
-    }) 
+    })
+
+    app.post('/property/new', (req, res) => {
+        const property = req.body
+        // TODO: create new property
+        res.json({})
+    })
+
+    app.post('/sale/new', (req, res) => {
+        const listing = req.body
+        // TODO: create new sale listing
+        res.json({})
+    })
+
+    app.post('/rent/new', (req, res) => {
+        const listing = req.body
+        // TODO: create new rental listing
+        res.json({})
+    })
 }

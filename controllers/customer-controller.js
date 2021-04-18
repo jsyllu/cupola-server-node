@@ -55,7 +55,7 @@ module.exports = (app) => {
     * Get the customer's detail information
     */
     app.get("/profile/:uid", (req, res) => {
-         // retreieve the data from db using uid as the unique identifier
+         // retrieve the data from db using uid as the unique identifier
         const uid = mongoose.Types.ObjectId(req.params.uid)
         const data = customerService.findCustomerById(uid)
         data.then(d => res.json(d))
@@ -65,7 +65,7 @@ module.exports = (app) => {
     * Get all customers info (only for admin)
     */
     app.get("/admin/profiles/:uid", (req, res) => {
-        // retreieve the data from db using uid as the unique identifier
+        // retrieve the data from db using uid as the unique identifier
        const uid = mongoose.Types.ObjectId(req.params.uid)
        const data = customerService.findCustomerById(uid)
        data.then(d => {
@@ -87,5 +87,57 @@ module.exports = (app) => {
             "ok" : result.ok,
             "deletedCount:" : result.deletedCount
         }))
+    })
+
+    /**
+     * Delete the logged-in session
+     */
+    app.get('/logout', (req, res) => {
+        // TODO: delete the logged-in user session
+        res.status(200).json('logged out')
+    })
+
+    /**
+     * Create a logged-in user session
+     */
+    app.post('/login', (req, res) => {
+        const credential = req.body
+        // TODO: match the credential to create a logged-in user session
+        res.json({
+            "login": 'logged in',
+            "_id": '6078a7f0d0845088bc831f32'
+        })
+    })
+
+    /**
+     * Create new seller profile for a user
+     */
+    app.get('/profile/:uid/sellerProfile', (req, res) => {
+        // TODO
+        res.json({})
+    })
+
+    /**
+     * Create new buyer profile for a user
+     */
+    app.get('/profile/:uid/buyerProfile', (req, res) => {
+        // TODO
+        res.json({})
+    })
+
+    /**
+     * Create new landlord profile for a user
+     */
+    app.get('/profile/:uid/landlordProfile', (req, res) => {
+        // TODO
+        res.json({})
+    })
+
+    /**
+     * Create new tenant profile for a user
+     */
+    app.get('/profile/:uid/tenantProfile', (req, res) => {
+        // TODO
+        res.json({})
     })
 }
