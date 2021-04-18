@@ -4,15 +4,15 @@ const createCustomer = (customer, callback) => {
     return customerDao.createCustomer(customer, callback)
 }
 
-const updateCustomer = (updatedCustomer, callback) => {
-    return customerDao.updateCustomer(updatedCustomer["_id"], updatedCustomer, callback)
+const updateCustomer = (updatedCustomer, options, callback) => {
+    return customerDao.updateCustomer(updatedCustomer["_id"], updatedCustomer, options, callback)
 }
 
-const findCustomerById = (uid) => customerDao.findCustomerById(uid)
+const findCustomerById = (uid, callback) => customerDao.findCustomerById(uid, callback)
 
-const findCustomers = () => customerDao.findCustomers()
+const findCustomers = (callback) => customerDao.findCustomers(callback)
 
-const deleteCustomer = (uid) => customerDao.deleteCustomerById(uid)
+const deleteCustomer = (uid, callback) => customerDao.deleteCustomerById(uid, callback)
 
 module.exports = {
     createCustomer,
