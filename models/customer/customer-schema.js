@@ -7,7 +7,10 @@ const customerSchema = mongoose.Schema({
     firstName : String,
     lastName : String,
     phone : Number,
-    email : String,
+    email : {
+        type : String,
+        required : true
+    },
     password : {
         type : String,
         required : true

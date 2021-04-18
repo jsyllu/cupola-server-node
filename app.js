@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3001
+const session = require('express-session')
 const cors = require('cors')
 const mongoose = require("mongoose")
 // connect db
@@ -10,16 +11,25 @@ mongoose.connect(process.env["MONGODB_URI"],
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    })
-    .then(() => console.log('Connected to mongodb atlas successfully'))
-    .catch(err => console.log(err))
+    }
+)
+.then(() => console.log('Connected to mongodb atlas successfully'))
+.catch(err => console.log(err))
+
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true }
+}))
+    
+    
 
 // configure middlewares
 // configure CORS
 const corsOptions = {
-    origin: '*'
-        // ['https://cupola.herokuapp.com/', 'http://localhost:3000/', '*']
-    ,
+    origin: ['https://cupola.herokuapp.com/', 'http://localhost:3000/'],
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     methods: ['GET', 'PUT', 'POST', "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "X-Requested-With", "Origin"]

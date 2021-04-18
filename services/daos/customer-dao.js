@@ -28,7 +28,7 @@ const updateCustomer = (uid, updatedCustomer, options={new : true}, callback) =>
  * @returns 
  */
 const findCustomerByPredicates = (predicates, callback) => {
-    customerModel.findOne(predicates)
+    customerModel.find(predicates)
     .exec((err, data) => {
         if (err) {
             console.log(`Error from findCustomerByPredicates : ${err}`)

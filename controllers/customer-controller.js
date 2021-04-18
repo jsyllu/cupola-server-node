@@ -19,22 +19,6 @@ const mongoose = require('mongoose');
 module.exports = (app) => {
 
     /**
-    * URL to create a new customer, registration information encoded in the body
-    * body pattern
-    */
-    app.post("/register", (req, res) => {
-        // extract information from the request body
-        const data = JSON.parse(JSON.stringify(req.body))
-        // save the data to the database
-        
-        customerService.createCustomer(data, (err, data) => {
-            if (!err)
-                res.status(200).json(data)
-            else 
-                res.status(404).send(err.message)
-        })
-    })
-    /**
     * Update customer information, updated information encoded in the body
     */
     app.put("/profile/:uid", (req, res) => {
@@ -105,54 +89,64 @@ module.exports = (app) => {
     })
 
     /**
+    * URL to create a new customer, registration information encoded in the body
+    * body pattern
+    */
+    app.post("/register", (req, res) => {
+        // extract information from the request body
+        const credentials = JSON.parse(JSON.stringify(req.body))
+        // save the data to the database
+        
+        customerService.findCustomerByPredicates({
+            email : credentials["email"]
+        }, (err, actualCustomers) => {
+            if (err)
+                res.status(404).send(err.message)
+            else {
+                if (actualCustomers.length > 0) {
+                    res.status(404).send("Email already exist")
+                } else {
+                    customerService.createCustomer(data, (err, data) => {
+                        if (!err) {
+                            req.session["profile"] = data
+                            res.status(200).json(data)
+                        } else 
+                            res.status(404).send(err.message)
+                    })
+                }
+            }
+        })
+    })
+
+    /**
      * Delete the logged-in session
      */
-    app.get('/logout', (req, res) => {
+    app.post('/profile/logout', (req, res) => {
         // TODO: delete the logged-in user session
+        req.session['profile'] = undefined
         res.status(200).json('logged out')
     })
 
     /**
      * Create a logged-in user session
      */
-    app.post('/login', (req, res) => {
-        const credential = req.body
-        // TODO: match the credential to create a logged-in user session
-        res.json({
-            "login": 'logged in',
-            "_id": '6078a7f0d0845088bc831f32'
+    app.post('/profile/login', (req, res) => {
+        const credentials = req.body;
+        customerService.findCustomerByPredicates({
+            "email" : credentials.email,
+            "password" : credentials.password
+        }, (err, numOfMatches) => {
+            if (err)
+                res.status(404).send(err.message)
+            else {
+                if (numOfMatches.length > 0) {
+                    req.session['profile'] = numOfMatches[0]
+                    res.status(200).json(numOfMatches[0])                    
+                }
+                else
+                    res.status(404).send("Authentication failed")
+            }
         })
     })
 
-    /**
-     * Create new seller profile for a user
-     */
-    app.get('/profile/:uid/sellerProfile', (req, res) => {
-        // TODO
-        res.json({})
-    })
-
-    /**
-     * Create new buyer profile for a user
-     */
-    app.get('/profile/:uid/buyerProfile', (req, res) => {
-        // TODO
-        res.json({})
-    })
-
-    /**
-     * Create new landlord profile for a user
-     */
-    app.get('/profile/:uid/landlordProfile', (req, res) => {
-        // TODO
-        res.json({})
-    })
-
-    /**
-     * Create new tenant profile for a user
-     */
-    app.get('/profile/:uid/tenantProfile', (req, res) => {
-        // TODO
-        res.json({})
-    })
 }

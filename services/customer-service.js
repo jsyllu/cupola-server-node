@@ -14,10 +14,13 @@ const findCustomers = (callback) => customerDao.findCustomers(callback)
 
 const deleteCustomer = (uid, callback) => customerDao.deleteCustomerById(uid, callback)
 
+const findCustomerByPredicates = (predicates, callback) => customerDao.findCustomerByPredicates(predicates, callback)
+
 module.exports = {
     createCustomer,
     updateCustomer,
     findCustomerById,
     findCustomers,
-    deleteCustomer
+    deleteCustomer,
+    findCustomerByPredicates
 }
