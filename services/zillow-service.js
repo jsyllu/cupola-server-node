@@ -1,8 +1,8 @@
 const fetch = require("node-fetch")
 
-const URL = process.env["REACT_APP_CUPOLA_URL"]
-const API_KEY = process.env["REACT_APP_CUPOLA_API_KEY"]
-const API_HOST = process.env["REACT_APP_CUPOLA_API_HOST"]
+const URL = process.env["REACT_APP_CUPOLA_ZILLOW_URL"]
+const API_KEY = process.env["REACT_APP_CUPOLA_ZILLOW_API_KEY"]
+const API_HOST = process.env["REACT_APP_CUPOLA_ZILLOW_API_HOST"]
 
 /**
  * construct the endpoint url
@@ -57,8 +57,10 @@ const getPropertyDetail = async (params) => {
             "x-rapidapi-host" : API_HOST
         }
     })
+
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        console.log(response)
+        throw new Error(`HTTP error! status: ${response.statusText}`)
     }
     return response.json()
 }

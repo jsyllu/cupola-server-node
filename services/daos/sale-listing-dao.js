@@ -1,4 +1,5 @@
-const rentalListingModel = require("../../models/rental-listing/rental-listing-model")
+const { model } = require("mongoose")
+const saleListingModel = require("../../models/sale-listing/sale-listing-model")
 
 /**
  * Calculate the distance between two geo coordinates in km
@@ -22,19 +23,13 @@ const haversine = (lat1, lon1, lat2, lon2) => {
     return c * earthRadiusKm
 }
 
-// https://stackoverflow.com/questions/31357745/find-after-populate-mongoose
-/**
- * Find rentalListings based on the location provided (within 320 km)
- * @param {Number} lat 
- * @param {Number} lon 
- */
-const findRentalListingsByLocation = (lat, lon, callback) => {
-    rentalListingModel
+const findSaleListingsByLocation = (lat, lon, callback) => {
+    saleListingModel
     .find()
     .populate("pid")
     .exec((err, data) => {
         if (err) {
-            console.log(`Error from findRentalListingsByLocation : ${err}`)
+            console.log(`Error from findSaleListingsByLocation : ${err}`)
             callback(err)
         } else {
             listings = data.filter(l => {
@@ -48,27 +43,27 @@ const findRentalListingsByLocation = (lat, lon, callback) => {
 }
 
 /**
- * Find the rentalListingsById
- * @param {Object} rlid 
+ * Find the saleListingsById
+ * @param {Object} slid 
  * @returns 
  */
-const findRentalListingById = (rlid, callback) => {
-    rentalListingModel
-    .findById(rlid)
+const findSaleListingById = (slid, callback) => {
+    saleListingModel
+    .findById(slid)
     .populate("pid")
     .exec((err, data) => {
         if (err) {
-            console.log(`Error from findRentalListingById : ${err}`)
+            console.log(`Error from findSaleListingById : ${err}`)
             callback(err)            
         } else
             callback(null, data)
     })
 }
 
-const createRentalListing = (listing, callback) => {
-    rentalListingModel.create(listing, (err, data) => {
+const createSaleListing = (listing, callback) => {
+    saleListingModel.create(listing, (err, data) => {
         if (err) {
-            console.log(`Error from createRentalListing : ${err}`)
+            console.log(`Error from createSaleListing : ${err}`)
             callback(err)
         } else
             callback(null, data)
@@ -76,8 +71,8 @@ const createRentalListing = (listing, callback) => {
     })
 }
 
-const deleteRentalListingById = (rlid) => {
-    return rentalListingModel.deleteOne({"_id" : rlid})
+const deleteSaleListingById = (slid) => {
+    return rentalListingModel.deleteOne({"_id" : slid})
             .then(result => {
                 return {
                     "ok" : result.ok,
@@ -86,11 +81,11 @@ const deleteRentalListingById = (rlid) => {
             })
 }
 
-const updateRentalListingById = (rlid, updatedListing, callback) => {
-    rentalListingModel.findByIdAndUpdate({"_id" : rlid}, updatedListing)
+const updateSaleListingById = (slid, updatedListing, callback) => {
+    saleListingModel.findByIdAndUpdate({"_id" : slid}, updatedListing)
     .exec((err, data) => {
         if (err) {
-            console.log(`Error from updateRentalListingById : ${err}`)
+            console.log(`Error from updateSaleListingById : ${err}`)
             callback(err)
         } else
             callback(null, data)        
@@ -98,9 +93,9 @@ const updateRentalListingById = (rlid, updatedListing, callback) => {
 }
 
 module.exports = {
-    findRentalListingsByLocation,
-    findRentalListingById,
-    createRentalListing,
-    deleteRentalListingById,
-    updateRentalListingById
+    findSaleListingsByLocation,
+    findSaleListingById,
+    createSaleListing,
+    deleteSaleListingById,
+    updateSaleListingById
 }

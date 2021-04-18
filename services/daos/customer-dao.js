@@ -11,7 +11,7 @@ const createCustomer = (customer, callback) => {
     })
 } 
 
-const updateCustomer = (uid, updatedCustomer, callback) => {
+const updateCustomer = (uid, updatedCustomer, options={new : true}, callback) => {
     customerModel.findByIdAndUpdate({"_id" : uid}, updatedCustomer)
     .exec((err, data) =>{
         if (err) {
@@ -22,17 +22,61 @@ const updateCustomer = (uid, updatedCustomer, callback) => {
     })
 }
 
-const findCustomerById = (uid) => customerModel.findOne({"_id" : uid})
+/**
+ * Find by predicates, an object which keys are field in the db
+ * @param {Object} predicates 
+ * @returns 
+ */
+const findCustomerByPredicates = (predicates, callback) => {
+    customerModel.findOne(predicates)
+    .exec((err, data) => {
+        if (err) {
+            console.log(`Error from findCustomerByPredicates : ${err}`)
+            callback(err)
+        } else
+            callback(null, data)
+    })
+}
 
-const deleteCustomerById = (uid) => customerModel.deleteOne({"_id" : uid})
+const findCustomerById = (uid, callback) => {
+    customerModel.findOne({"_id" : uid})
+    .exec((err, data) => {
+        if (err) {
+            console.log(`Error from findCustomerById : ${err}`)
+            callback(err)
+        } else
+            callback(null, data)        
+    })
+}
 
-const findCustomers = () => customerModel.find().exec()
+const deleteCustomerById = (uid, callback) => {
+    customerModel.deleteOne({"_id" : uid})
+    .exec((err, data) => {
+        if (err) {
+            console.log(`Error from deleteCustomerById : ${err}`)
+            callback(err)
+        } else
+            callback(null, data)           
+    })
+}
+
+const findCustomers = (callback) => {
+    customerModel.find()
+    .exec((err, data) => {
+        if (err) {
+            console.log(`Error from findCustomers : ${err}`)
+            callback(err)
+        } else
+            callback(null, data)              
+    })
+} 
 
 module.exports = {
     createCustomer,
     updateCustomer,
     findCustomerById,
     deleteCustomerById,
-    findCustomers
+    findCustomers,
+    findCustomerByPredicates
 }
 

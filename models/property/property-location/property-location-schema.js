@@ -1,12 +1,15 @@
 const mongoose = require("mongoose")
 const propertyLocationSchema = mongoose.Schema({
-    street : String,
-    city : String,
-    state : String,
-    country : String,
-    zipCode : Number,
-    longitude : Number,
-    latitude : Number
+    street : String, // address.streetAddress
+    city : String, // address.city
+    state : String, // address.state
+    country : {
+        type : String,
+        default : "USA"
+    }, // country
+    zipCode : Number, // address.zipcode
+    longitude : Number, // longitude
+    latitude : Number // latitude
 }, {collection : "propertyLocations"})
 
 module.exports = propertyLocationSchema

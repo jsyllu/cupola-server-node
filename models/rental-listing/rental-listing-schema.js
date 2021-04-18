@@ -17,22 +17,11 @@ const rentalListingSchema = mongoose.Schema({
         type : Date,
         default : new Date()
     },
-    monthlyRent : Number,
+    monthlyRent : Number, // price
     currency : {
         type : String,
         enum : currencies
-    },
-    securityDeposit : Number,
-    securityDeposityRefundable : Boolean,
-    otherDeposit : Number,
-    otherDepositRefundable : Boolean,
-    availableFrom : Date,
-    leaseLength : Number,
-    maxOccupancy: Number,
-    animalFriendly : Boolean,
-    restrictions : String,
-    lendingProof : String,
-    rightToLend : Boolean
+    } // USD
 }, {collection : "rentalListings"})
 
 module.exports = rentalListingSchema

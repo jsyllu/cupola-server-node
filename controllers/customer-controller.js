@@ -29,7 +29,7 @@ module.exports = (app) => {
         
         customerService.createCustomer(data, (err, data) => {
             if (!err)
-                res.status(200).send(data)
+                res.status(200).json(data)
             else 
                 res.status(404).send(err.message)
         })
@@ -40,13 +40,13 @@ module.exports = (app) => {
     app.put("/profile/:uid", (req, res) => {
         // extract information from the request body
         const uid = mongoose.Types.ObjectId(req.params.uid)
-        const data = JSON.parse(JSON.stringify(req.body))
-        data["_id"] = uid
+        const updatedRecord = JSON.parse(JSON.stringify(req.body))
+        updatedRecord["_id"] = uid
         // save the data to the database
-        customerService.updateCustomer(data, (err, data) => {
-            if (!err)
-                res.status(200).send(data)
-            else 
+        customerService.updateCustomer(updatedRecord, {new : true}, (err, data) => {
+            if (!err) {
+                res.status(200).json(updatedRecord)
+            } else 
                 res.status(404).send(err.message)            
         })
     })
@@ -57,8 +57,12 @@ module.exports = (app) => {
     app.get("/profile/:uid", (req, res) => {
          // retrieve the data from db using uid as the unique identifier
         const uid = mongoose.Types.ObjectId(req.params.uid)
-        const data = customerService.findCustomerById(uid)
-        data.then(d => res.json(d))
+        customerService.findCustomerById(uid, (err, data) => {
+            if (!err)
+                res.status(200).json(data)
+            else 
+                res.status(404).send(err.message)               
+        })
     })
 
     /**
@@ -67,14 +71,21 @@ module.exports = (app) => {
     app.get("/admin/profiles/:uid", (req, res) => {
         // retrieve the data from db using uid as the unique identifier
        const uid = mongoose.Types.ObjectId(req.params.uid)
-       const data = customerService.findCustomerById(uid)
-       data.then(d => {
-            if (d !== null && d["isAdmin"] === true) {
-                customerService.findCustomers()
-                .then(d => res.status(200).json(d))
-            } else
-                res.status(404).send("Unauthorized Access")
-        })
+       customerService.findCustomerById(uid, (err, data) => {
+            if (err)
+                res.status(404).send(err.message) 
+            else {
+                if (data !== null && data["isAdmin"] === true) {
+                    customerService.findCustomers((err, data) => {
+                        if (!err)
+                            res.status(200).json(data)
+                        else 
+                            res.status(404).send(err.message)                          
+                    })
+                } else
+                    res.status(404).send("Unauthorized Access")
+            }                
+       })
     })
 
     /**
@@ -82,11 +93,15 @@ module.exports = (app) => {
      */
     app.delete("/profile/:uid", (req, res) => {
         const uid = mongoose.Types.ObjectId(req.params.uid)
-        customerService.deleteCustomer(uid)
-        .then(result => res.json({
-            "ok" : result.ok,
-            "deletedCount:" : result.deletedCount
-        }))
+        customerService.deleteCustomer(uid, (err, data) => {
+            if (!err)
+                res.status(200).json({
+                    "ok" : data.ok,
+                    "deletedCount:" : data.deletedCount
+                })
+            else 
+                res.status(404).send(err.message)             
+        })
     })
 
     /**
