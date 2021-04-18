@@ -71,7 +71,6 @@ const getPropertyDetail = async (params) => {
  */
 const getPropertyImages = async (params) => {
     let endPoint = getEndPointHelper("images", params)
-
     let response = await fetch(endPoint, {
         method : "GET",
         headers : {

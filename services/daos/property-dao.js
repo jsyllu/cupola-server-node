@@ -1,7 +1,7 @@
 const propertyModel = require("../../models/property/property-model")
 
 const createProperty = (property, callback) => {
-    propertyModel.create(property, (err, data) => {
+    return propertyModel.create(property, (err, data) => {
         if (err) {
             console.log(`Error from createProperty : ${err}`)
             callback(err)
@@ -10,8 +10,18 @@ const createProperty = (property, callback) => {
     })
 }
 
+const createManyProperties = (properties, callback) => {
+    propertyModel.insertMany(properties, (err, data) => {
+        if (err) {
+            console.log(`Error from createManyProperties : ${err}`)
+            callback(err)
+        } else
+            callback(null, data)      
+    })
+}
+
 const findPropertyById = (pid, callback) => {
-    propertyModel.findById(pid)
+    return propertyModel.findById(pid)
     .exec((err, data) => {
         if (err) {
             console.log(`Error from findPropertyById : ${err}`)
@@ -32,8 +42,12 @@ const deletePropertyById = (pid) => {
 }
 
 const updatePropertyById = (pid, updatedProperty, callback) => {
-    propertyModel.findByIdAndUpdate({"_id" : pid}, updatedProperty)
-    .exec((err, data) => {
+    return propertyModel.findOneAndUpdate({"_id" : pid}, 
+                                            updatedProperty,
+                                            {new : true,
+                                            upsert: false},
+                                            (err, data) => {
+        
         if (err) {
             console.log(`Error from updatePropertyById : ${err}`)
             callback(err)
@@ -46,5 +60,6 @@ module.exports = {
     createProperty,
     findPropertyById,
     updatePropertyById,
-    deletePropertyById
+    deletePropertyById,
+    createManyProperties
 }

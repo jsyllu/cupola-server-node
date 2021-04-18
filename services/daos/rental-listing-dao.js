@@ -1,25 +1,38 @@
 const rentalListingModel = require("../../models/rental-listing/rental-listing-model")
 
 /**
- * Calculate the distance between two geo coordinates in km
- * @param {Number} lat1 
- * @param {Number} lon1 
- * @param {Number} lat2 
- * @param {Number} lon2 
- * @returns 
+ * Calculate the haversine distance
+ * @param {Array} coords1 - the 1st elem is lat, the 2nd is lon
+ * @param {Array} coords2 - the 1st elem is lat, the 2nd is lon
+ * @param {Boolean} isMiles 
+ * @returns the distance between two coordinates
  */
-const haversine = (lat1, lon1, lat2, lon2) => {
-    earthRadiusKm = 6371
-
-    distLat = (lat1 - lat2) * Math.PI / 180.0
-    distLon = (lon1 - lon2) * Math.PI / 180.0
-
-    redianLat1 = lat1 * Math.PI / 180.0
-    redianLat2 = lat2 * Math.PI / 180.0
-
-    a = Math.pow(2, Math.sin(distLat / 2)) + Math.pow(2, Math.sin(distLon / 2)) * Math.cos(redianLat1) * Math.cos(redianLat2)
-    c = 2 * Math.asin(Math.sqrt(a))
-    return c * earthRadiusKm
+ function haversineDistance(coords1, coords2, isMiles=false) {
+    function toRad(x) {
+        return x * Math.PI / 180;
+    }
+  
+    var lon1 = coords1[1];
+    var lat1 = coords1[0];
+  
+    var lon2 = coords2[1];
+    var lat2 = coords2[0];
+  
+    var R = 6371; // km
+  
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+  
+    if(isMiles) d /= 1.60934;
+  
+    return d;
 }
 
 // https://stackoverflow.com/questions/31357745/find-after-populate-mongoose
@@ -38,9 +51,9 @@ const findRentalListingsByLocation = (lat, lon, callback) => {
             callback(err)
         } else {
             listings = data.filter(l => {
-                const dist = haversine(l.pid.location.latitude, l.pid.location.longitude, lat, lon)
-                console.log(dist)
-                return dist <= 320
+                const dist = haversineDistance([l.pid.latitude, l.pid.longitude], [lat, lon])
+                // console.log(dist)
+                return dist <= -1
             })
             callback(null, listings)
         }
@@ -53,7 +66,7 @@ const findRentalListingsByLocation = (lat, lon, callback) => {
  * @returns 
  */
 const findRentalListingById = (rlid, callback) => {
-    rentalListingModel
+    return rentalListingModel
     .findById(rlid)
     .populate("pid")
     .exec((err, data) => {
@@ -65,10 +78,44 @@ const findRentalListingById = (rlid, callback) => {
     })
 }
 
+
+/**
+ * Find the rentalListings By Ids
+ * @param {Object} slid 
+ * @returns 
+ */
+ const findRentalListingsByIds =  (rlids, callback) => {
+    return rentalListingModel
+    .find({
+        '_id': { $in: rlids}
+    })
+    .populate("pid")
+    .exec((err, data) => {
+        if (err) {
+            console.log(`Error from findRentalListingsByIds : ${err}`)
+            callback(err)            
+        } else
+            callback(null, data)
+    })
+}
+
+
 const createRentalListing = (listing, callback) => {
-    rentalListingModel.create(listing, (err, data) => {
+    return rentalListingModel.create(listing, (err, data) => {
         if (err) {
             console.log(`Error from createRentalListing : ${err}`)
+            callback(err)
+        } else
+            callback(null, data)
+                
+    })
+}
+
+
+const createManyRentalListings = (listings, callback) => {
+    return rentalListingModel.insertMany(listings, (err, data) => {
+        if (err) {
+            console.log(`Error from createManyRentalListings : ${err}`)
             callback(err)
         } else
             callback(null, data)
@@ -87,8 +134,11 @@ const deleteRentalListingById = (rlid) => {
 }
 
 const updateRentalListingById = (rlid, updatedListing, callback) => {
-    rentalListingModel.findByIdAndUpdate({"_id" : rlid}, updatedListing)
-    .exec((err, data) => {
+    return rentalListingModel.findOneAndUpdate({"_id" : rlid}, 
+    updatedListing,
+    {new : true,
+    upsert: false},
+    (err, data) => {
         if (err) {
             console.log(`Error from updateRentalListingById : ${err}`)
             callback(err)
@@ -102,5 +152,7 @@ module.exports = {
     findRentalListingById,
     createRentalListing,
     deleteRentalListingById,
-    updateRentalListingById
+    updateRentalListingById,
+    createManyRentalListings,
+    findRentalListingsByIds
 }
