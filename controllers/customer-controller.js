@@ -106,7 +106,7 @@ module.exports = (app) => {
                 if (actualCustomers.length > 0) {
                     res.status(404).send("Email already exist")
                 } else {
-                    customerService.createCustomer(data, (err, data) => {
+                    customerService.createCustomer(credentials, (err, data) => {
                         if (!err) {
                             req.session["profile"] = data
                             res.status(200).json(data)
