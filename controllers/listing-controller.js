@@ -80,6 +80,7 @@ module.exports = (app) => {
     const getSalePropertiesHelper = (address, res) => {
         geocodingService.getGeoLocationForAddress(address)
         .then(getLoc => {
+            // console.log(getLoc)
             const lat = getLoc["results"][0]["geometry"]["location"]["lat"]
             const lon = getLoc["results"][0]["geometry"]["location"]["lng"]
             // check if db has data for this location
@@ -254,6 +255,7 @@ module.exports = (app) => {
         // convert address to geo location
         // const uid = mongoose.Types.ObjectId("607895710da0953e57c44f52")
         const address = req.params.location
+        // console.log(address)
         getSalePropertiesHelper(address, res)
         // saleListingDao.findSaleListingsByLocation()
         // if exist, retreieve from db

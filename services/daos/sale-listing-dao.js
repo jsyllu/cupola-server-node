@@ -45,6 +45,7 @@ const findSaleListingsByLocation = (lat, lon, callback) => {
             console.log(`Error from findSaleListingsByLocation : ${err}`)
             callback(err)
         } else {
+            console.log(data)
             if (data.length === 0) {
                 callback(null, data)
             }
@@ -53,7 +54,7 @@ const findSaleListingsByLocation = (lat, lon, callback) => {
                 const dist = haversineDistance([l.pid.latitude, l.pid.longitude], [lat, lon])
                 return dist <= 300
             })
-            
+            callback(null, listings)
         }
     })
 }
