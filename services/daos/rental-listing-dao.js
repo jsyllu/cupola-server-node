@@ -48,10 +48,10 @@ const findRentalListingsByLocation = (lat, lon, callback) => {
     .exec((err, data) => {
         if (err) {
             console.log(`Error from findRentalListingsByLocation : ${err}`)
-            callback(err)
+            return callback(err)
         } else {
             if (data.length === 0) {
-                callback(null, data)
+                return callback(null, data)
             }
 
             listings = data.filter(l => {
@@ -59,7 +59,7 @@ const findRentalListingsByLocation = (lat, lon, callback) => {
                 // console.log(dist)
                 return dist <= 100
             })
-            callback(null, listings)
+            return callback(null, listings)
         }
     })
 }
