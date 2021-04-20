@@ -57,7 +57,7 @@ const findRentalListingsByLocation = (lat, lon, callback) => {
             listings = data.filter(l => {
                 const dist = haversineDistance([l.pid.latitude, l.pid.longitude], [lat, lon])
                 // console.log(dist)
-                return dist <= 300
+                return dist <= 100
             })
             callback(null, listings)
         }

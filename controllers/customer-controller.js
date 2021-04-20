@@ -29,9 +29,9 @@ module.exports = (app) => {
         // save the data to the database
         customerService.updateCustomer(updatedRecord, {new : true}, (err, data) => {
             if (!err) {
-                res.status(200).json(updatedRecord)
+                return res.status(200).json(updatedRecord)
             } else 
-                res.status(404).send(err.message)            
+                return res.status(404).send(err.message)            
         })
     })
 
@@ -43,9 +43,9 @@ module.exports = (app) => {
         const uid = mongoose.Types.ObjectId(req.params.uid)
         customerService.findCustomerById(uid, (err, data) => {
             if (!err)
-                res.status(200).json(data)
+                return res.status(200).json(data)
             else 
-                res.status(404).send(err.message)               
+                return res.status(404).send(err.message)               
         })
     })
 
@@ -57,17 +57,17 @@ module.exports = (app) => {
        const uid = mongoose.Types.ObjectId(req.params.uid)
        customerService.findCustomerById(uid, (err, data) => {
             if (err)
-                res.status(404).send(err.message) 
+                return res.status(404).send(err.message) 
             else {
                 if (data !== null && data["isAdmin"] === true) {
                     customerService.findCustomers((err, data) => {
                         if (!err)
-                            res.status(200).json(data)
+                            return res.status(200).json(data)
                         else 
-                            res.status(404).send(err.message)                          
+                            return res.status(404).send(err.message)                          
                     })
                 } else
-                    res.status(404).send("Unauthorized Access")
+                    return res.status(404).send("Unauthorized Access")
             }                
        })
     })
@@ -84,7 +84,7 @@ module.exports = (app) => {
                     "deletedCount:" : data.deletedCount
                 })
             else 
-                res.status(404).send(err.message)             
+                return res.status(404).send(err.message)             
         })
     })
 
@@ -101,17 +101,17 @@ module.exports = (app) => {
             email : credentials["email"]
         }, (err, actualCustomers) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else {
                 if (actualCustomers.length > 0) {
-                    res.status(404).send("Email already exist")
+                    return res.status(404).send("Email already exist")
                 } else {
                     customerService.createCustomer(credentials, (err, data) => {
                         if (!err) {
                             req.session["profile"] = data
-                            res.status(200).json(data)
+                            return res.status(200).json(data)
                         } else 
-                            res.status(404).send(err.message)
+                            return res.status(404).send(err.message)
                     })
                 }
             }
@@ -124,7 +124,7 @@ module.exports = (app) => {
     app.post('/profile/logout', (req, res) => {
         // TODO: delete the logged-in user session
         req.session['profile'] = undefined
-        res.status(200).json('logged out')
+        return res.status(200).json('logged out')
     })
 
     /**
@@ -137,14 +137,14 @@ module.exports = (app) => {
             "password" : credentials.password
         }, (err, numOfMatches) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else {
                 if (numOfMatches.length > 0) {
                     req.session['profile'] = numOfMatches[0]
-                    res.status(200).json(numOfMatches[0])                    
+                    return res.status(200).json(numOfMatches[0])                    
                 }
                 else
-                    res.status(404).send("Authentication failed")
+                    return  res.status(404).send("Authentication failed")
             }
         })
     })
