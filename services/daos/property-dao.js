@@ -1,3 +1,4 @@
+const mongoose = require("mongoose")
 const propertyModel = require("../../models/property/property-model")
 
 const createProperty = (property, callback) => {
@@ -42,17 +43,17 @@ const deletePropertyById = (pid) => {
 }
 
 const updatePropertyById = (pid, updatedProperty, callback) => {
-    return propertyModel.findOneAndUpdate({"_id" : pid}, 
+    return propertyModel.updateOne({"_id" : mongoose.Types.ObjectId(pid)}, 
                                             updatedProperty,
-                                            {new : true,
-                                            upsert: false},
                                             (err, data) => {
         
         if (err) {
             console.log(`Error from updatePropertyById : ${err}`)
             callback(err)
-        } else
+        } else {
+            // console.log(data)
             callback(null, data)        
+        }
     })
 }
 
