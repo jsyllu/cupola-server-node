@@ -407,7 +407,7 @@ module.exports = (app) => {
             if (err)
                 res.status(404).send(err.message)
             else 
-                res.staus(200).json(data)
+                res.status(200).json(data)
         })
     })
 
@@ -417,7 +417,7 @@ module.exports = (app) => {
             if (err)
                 res.status(404).send(err.message)
             else 
-                res.staus(200).json(data)
+                res.status(200).json(data)
         })        
     })
 
@@ -427,7 +427,7 @@ module.exports = (app) => {
             if (err)
                 res.status(404).send(err.message)
             else 
-                res.staus(200).json(data)
+                res.status(200).json(data)
         })        
     })
 

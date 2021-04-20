@@ -6,7 +6,7 @@ const saleListingSchema = mongoose.Schema({
     pid : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "propertyModel",
-        require : true
+        required : true
     },
     createdAt : {
         type : Date,

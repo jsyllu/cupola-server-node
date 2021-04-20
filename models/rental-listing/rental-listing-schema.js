@@ -6,8 +6,8 @@ const currencies = require("../currency/currency-enum")
 const rentalListingSchema = mongoose.Schema({
     pid : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : PropertyModel,
-        require : true
+        ref : "propertyModel",
+        required : true
     },
     createdAt : {
         type : Date,
