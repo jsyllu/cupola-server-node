@@ -283,6 +283,11 @@ module.exports = (app) => {
             if (err)
                 res.status(404).send(err.message)
             else {
+                if (data === null) {
+                    res.status(200).json(data)
+                    return 
+                }
+
                 if (data.pid.details !== undefined) {
                     // console.log(data.pid.details)
                     res.status(200).send(data)
@@ -339,9 +344,13 @@ module.exports = (app) => {
         // else, retreieve from the zillowApi and store to db
         const rlid = req.params.rlid
         rentalListingDao.findRentalListingById(rlid, (err, listing) => {
-            if (err || listing === null)
-                res.status(404).send(err === null ? "listing is null" : err.message)
+            if (err)
+                res.status(404).send(err.message)
             else {
+                if (listing === null) {
+                    res.status(200).json(listing)
+                    return 
+                }
                 console.log(listing.pid.details)
                 if (listing.pid.details !== undefined) {
                     console.log("yoyoyoy")
