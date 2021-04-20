@@ -23,11 +23,11 @@ module.exports = (app) => {
             // check if db has data for this location
             rentalListingDao.findRentalListingsByLocation(lat, lon, (err, rentalListings) => {
                 if (err) {
-                    res.status(404).send(err.message)
+                    return res.status(404).send(err.message)
                 } else {
                     const numRecords = rentalListings.length
                     if (numRecords > 0)
-                        res.status(200).json(rentalListings)
+                        return  res.status(200).json(rentalListings)
                     else {
                         // retreieve from the zillowApi and store to db
                         zillowService.getPropertyByFilters({
@@ -57,9 +57,9 @@ module.exports = (app) => {
 
                             propertyDao.createManyProperties(properties, (err, data) => {
                                 if (err)
-                                    res.status(404).send(err.message)
+                                    return res.status(404).send(err.message)
                                 else {
-                                    createManyRentalListingsHelper(data, res)
+                                    return createManyRentalListingsHelper(data, res)
                                 }
                             })
                         })
@@ -86,11 +86,11 @@ module.exports = (app) => {
             // check if db has data for this location
             saleListingDao.findSaleListingsByLocation(lat, lon, (err, rentalListings) => {
                 if (err) {
-                    res.status(404).send(err.message)
+                    return res.status(404).send(err.message)
                 } else {
                     const numRecords = rentalListings.length
                     if (numRecords > 0)
-                        res.status(200).json(rentalListings)
+                        return res.status(200).json(rentalListings)
                     else {
                         // retreieve from the zillowApi and store to db
                         zillowService.getPropertyByFilters({
@@ -120,9 +120,9 @@ module.exports = (app) => {
 
                             propertyDao.createManyProperties(properties, (err, data) => {
                                 if (err)
-                                    res.status(404).send(err.message)
+                                    return res.status(404).send(err.message)
                                 else {
-                                    createManySaleListingsHelper(data, res)
+                                    return createManySaleListingsHelper(data, res)
                                 }
                             })
                         })
@@ -151,7 +151,7 @@ module.exports = (app) => {
         // console.log(properties)
         saleListingDao.createManySaleListings(listings, (err, data) => {
             if (err) {
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             } else {
                 slids = []
                 for (idx in data) {
@@ -159,9 +159,9 @@ module.exports = (app) => {
                 }
                 saleListingDao.findSaleListingsByIds(slids, (err, data) => {
                     if (err)
-                        res.status(404).send(err.message)
+                        return res.status(404).send(err.message)
                     else
-                        res.status(200).json(data)
+                        return res.status(200).json(data)
                 }) 
             }
         })
@@ -184,7 +184,7 @@ module.exports = (app) => {
 
         rentalListingDao.createManyRentalListings(listings, (err, data) => {
             if (err) {
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             } else {
                 listings = []
                 for (idx in data) {
@@ -200,9 +200,9 @@ module.exports = (app) => {
                 }
                 rentalListingDao.findRentalListingsByIds(rlids, (err, data) => {
                     if (err)
-                        res.status(404).send(err.message)
+                        return res.status(404).send(err.message)
                     else
-                        res.status(200).json(data)
+                        return res.status(200).json(data)
                 }) 
             }
         })
@@ -222,9 +222,9 @@ module.exports = (app) => {
 
         saleListingDao.createSaleListing(listing, (err, data) => {
             if (err) {
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             } else
-                res.status(200).json(data)
+                return res.status(200).json(data)
         })
     }
 
@@ -241,10 +241,10 @@ module.exports = (app) => {
         listing["pid"] = property._id
 
         rentalListingDao.createRentalListing(listing, (err, data) => {
-            if (err) {
-                res.status(404).send(err.message)
-            } else
-                res.status(200).json(data)
+            if (err)
+                return res.status(404).send(err.message)
+            else
+                return res.status(200).json(data)
         })
     }
     
@@ -283,20 +283,19 @@ module.exports = (app) => {
         const slid = req.params.slid
         saleListingDao.findSaleListingById(slid, (err, data) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else {
                 if (data === null) {
-                    res.status(200).json(data)
-                    return 
+                    return res.status(200).json(data) 
                 }
 
                 if (data.pid.details !== undefined) {
                     // console.log(data.pid.details)
-                    res.status(200).send(data)
+                    return res.status(200).send(data)
                 } else {
                     if (data.pid.zillowId === undefined) {
                         // console.log("What?")
-                        res.status(200).send(data)
+                        return res.status(200).send(data)
                     } else {
                         zillowService.getPropertyDetail({"zpid" : data.pid.zillowId})
                         .then(zDetail => {
@@ -322,9 +321,9 @@ module.exports = (app) => {
                                     listting.pid.details = details
                                     propertyDao.updatePropertyById(listting.pid._id, listting.pid, (err, response) => {
                                         if (err)
-                                            res.status(404).send(err.message)
+                                            return res.status(404).send(err.message)
                                         else
-                                            res.status(200).json(listting)
+                                            return res.status(200).json(listting)
                                     })
                                 })
                                 .catch(err => res.status(404).send(err))
@@ -347,19 +346,18 @@ module.exports = (app) => {
         const rlid = req.params.rlid
         rentalListingDao.findRentalListingById(rlid, (err, listing) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else {
                 if (listing === null) {
-                    res.status(200).json(listing)
-                    return 
+                    return res.status(200).json(listing) 
                 }
-                console.log(listing.pid.details)
+                // console.log(listing.pid.details)
                 if (listing.pid.details !== undefined) {
                     console.log("yoyoyoy")
-                    res.status(200).send(listing)
+                    return res.status(200).send(listing)
                 } else {
                     if (listing.pid.zillowId === undefined) {
-                        res.status(200).send(listing)
+                        return res.status(200).send(listing)
                     } else {
                         zillowService.getPropertyDetail({"zpid" : listing.pid.zillowId})
                         .then(zDetail => {
@@ -385,10 +383,10 @@ module.exports = (app) => {
                                     listing["pid"]["details"] = details
                                     propertyDao.updatePropertyById(listing.pid._id, listing.pid, (err, response) => {
                                         if (err)
-                                            res.status(404).send(err.message)
+                                            return res.status(404).send(err.message)
                                         else {
                                             // console.log(response)
-                                            res.status(200).json(listing)
+                                            return res.status(200).json(listing)
                                         }
                                             
                                     })
@@ -407,9 +405,9 @@ module.exports = (app) => {
         const p = JSON.parse(JSON.stringify(req.body))
         propertyDao.createProperty(p, (err, data) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else 
-                res.status(200).json(data)
+                return res.status(200).json(data)
         })
     })
 
@@ -417,9 +415,9 @@ module.exports = (app) => {
         const listing = JSON.parse(JSON.stringify(req.body))
         rentalListingDao.createRentalListing(listing, (err, data) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else 
-                res.status(200).json(data)
+                return res.status(200).json(data)
         })        
     })
 
@@ -427,9 +425,9 @@ module.exports = (app) => {
         const listing = JSON.parse(JSON.stringify(req.body))
         saleListingDao.createSaleListing(listing, (err, data) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else 
-                res.status(200).json(data)
+                return res.status(200).json(data)
         })        
     })
 
@@ -443,18 +441,18 @@ module.exports = (app) => {
     const findRentalListingsHelper = (ids, res) => {
         rentalListingDao.findRentalListingsByIds(ids, (err, data) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else
-                res.status(200).json(data)
+                return res.status(200).json(data)
         })
     }
 
     const findSaleListingsHelper = (ids, res) => {
         saleListingDao.findSaleListingsByIds(ids, (err, data) => {
             if (err)
-                res.status(404).send(err.message)
+                return res.status(404).send(err.message)
             else
-                res.status(200).json(data)
+                return res.status(200).json(data)
         })
     }    
 
