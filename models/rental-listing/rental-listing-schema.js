@@ -17,7 +17,7 @@ const rentalListingSchema = mongoose.Schema({
         type : Date,
         default : new Date()
     },
-    monthlyRent : Number, // price
+    price : Number, // price
     currency : {
         type : String,
         enum : currencies
