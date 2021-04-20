@@ -4,12 +4,12 @@ const saleListingModel = require("../../sale-listing/sale-listing-model")
 
 const buyerProfileSchema = mongoose.Schema({
     bids : [{
-        type : String
-        // ref : "bidModel"
+        type : mongoose.Types.ObjectId,
+        ref : "bidModel"
     }],
     wishList : [{
-        type : String
-        // ref : "saleListingModel"
+        type : mongoose.Types.ObjectId,
+        ref : "saleListingModel"
     }]
 })
 

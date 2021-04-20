@@ -3,12 +3,12 @@ const saleListingModel = require("../../sale-listing/sale-listing-model")
 const bidModel = require("../../bid/bid-model")
 const sellerProfileSchema = mongoose.Schema({
     postToSell : [{
-        type : String
-        // ref : saleListingModel
+        type : mongoose.Types.ObjectId,
+        ref : "saleListingModel"
     }],
     saleListingResults : [{
-        type : String
-        // ref : bidModel
+        type : mongoose.Types.ObjectId,
+        ref : "bidModel"
     }]
 }, {collection : "sellerProfiles"})
 

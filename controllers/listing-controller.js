@@ -428,4 +428,42 @@ module.exports = (app) => {
             zpid
         }).then(data => res.json(data))
     })
+
+    const findRentalListingsHelper = (ids, res) => {
+        rentalListingDao.findRentalListingsByIds(ids, (err, data) => {
+            if (err)
+                res.status(404).send(err.message)
+            else
+                res.status(200).json(data)
+        })
+    }
+
+    const findSaleListingsHelper = (ids, res) => {
+        saleListingDao.findSaleListingsByIds(ids, (err, data) => {
+            if (err)
+                res.status(404).send(err.message)
+            else
+                res.status(200).json(data)
+        })
+    }    
+
+    app.post("/profile/wishlist/rent", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findRentalListingsHelper(ids, res)
+    })
+
+    app.post("/profile/wishlist/sale", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findSaleListingsHelper(ids, res)
+    })
+    
+    app.post("/profile/post/rent", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findRentalListingsHelper(ids, res)
+    })
+
+    app.post("/profile/post/sale", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findSaleListingsHelper(ids, res)
+    })
 }

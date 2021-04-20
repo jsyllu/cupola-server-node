@@ -69,7 +69,7 @@ const findCustomers = (callback) => {
         } else
             callback(null, data)              
     })
-} 
+}
 
 module.exports = {
     createCustomer,

@@ -3,12 +3,12 @@ const rentalListingModel = require("../../rental-listing/rental-listing-model")
 const rentalApplicationModel = require("../../rental-application/rental-application-model")
 const lenderProfileSchema = mongoose.Schema({
     postToLend : [{
-        type : String
-        // ref : rentalListingModel
+        type : mongoose.Types.ObjectId,
+        ref : "rentalListingModel"
     }],
     rentalListingResults : [{
-        type : String
-        // ref : rentalApplicationModel
+        type : mongoose.Types.ObjectId,
+        ref : "rentalApplicationModel"
     }]
 }, {collection : "lenderProfiles"})
 

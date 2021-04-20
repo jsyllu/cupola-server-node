@@ -3,12 +3,12 @@ const rentalApplicationModel = require("../../rental-application/rental-applicat
 const rentalListingModel = require("../../rental-listing/rental-listing-model")
 const tenantProfileSchema = mongoose.Schema({
     applications : [{
-        type : String
-        // ref : rentalApplicationModel
+        type : mongoose.Types.ObjectId,
+        ref : "rentalApplicationModel"
     }],
     wishList : [{
-        type : String
-        // ref : rentalListingModel
+        type : mongoose.Types.ObjectId,
+        ref : "rentalListingModel"
     }]
 }, {collection : "tenantProfiles"})
 
