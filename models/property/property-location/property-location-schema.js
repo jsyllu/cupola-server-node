@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
 const propertyLocationSchema = mongoose.Schema({
-    _id : mongoose.Types.ObjectId,
     street : String, // address.streetAddress
     city : String, // address.city
     state : String, // address.state

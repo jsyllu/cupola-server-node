@@ -5,7 +5,6 @@ const propertyDetailSchema = require("./property-detail/property-detail-schema")
 const customerModel = require("../customer/customer-model")
 
 const propertySchema = mongoose.Schema({
-    _id : mongoose.Schema.Types.ObjectId,
     uid : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "customerModel",

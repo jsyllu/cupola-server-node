@@ -147,7 +147,7 @@ module.exports = (app) => {
                 pid : properties[idx]._id,
             })
         }
-
+        // console.log(properties)
         saleListingDao.createManySaleListings(listings, (err, data) => {
             if (err) {
                 res.status(404).send(err.message)

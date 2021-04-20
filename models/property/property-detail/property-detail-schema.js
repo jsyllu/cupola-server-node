@@ -2,7 +2,6 @@ const mongoose = require("mongoose")
 const propertyLocationSchema = require("../property-location/property-location-schema")
 
 const propertyDetailSchema = mongoose.Schema({
-    _id : mongoose.Types.ObjectId,
     location : {
         type : propertyLocationSchema,
         default : undefined

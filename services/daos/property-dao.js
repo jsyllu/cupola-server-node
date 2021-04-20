@@ -16,8 +16,11 @@ const createManyProperties = (properties, callback) => {
         if (err) {
             console.log(`Error from createManyProperties : ${err}`)
             callback(err)
-        } else
+        } else {
+            console.log(data)
             callback(null, data)      
+        }
+            
     })
 }
 
