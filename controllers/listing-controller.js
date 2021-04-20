@@ -176,7 +176,7 @@ module.exports = (app) => {
         let listings = [] // 0 1 2
         for (idx in properties) {
             listings.push({
-                monthlyRent : properties[idx].price,
+                price : properties[idx].price,
                 currency : "USD",
                 pid : properties[idx]._id,
             })
