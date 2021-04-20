@@ -51,7 +51,7 @@ const findRentalListingsByLocation = (lat, lon, callback) => {
             callback(err)
         } else {
             if (data.length === 0) {
-                callback(null, listings)
+                callback(null, data)
             }
 
             listings = data.filter(l => {

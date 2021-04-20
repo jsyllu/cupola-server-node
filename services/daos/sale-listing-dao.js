@@ -46,9 +46,9 @@ const findSaleListingsByLocation = (lat, lon, callback) => {
             callback(err)
         } else {
             if (data.length === 0) {
-                callback(null, listings)
+                callback(null, data)
             }
-            // console.log(data)
+
             listings = data.filter(l => {
                 const dist = haversineDistance([l.pid.latitude, l.pid.longitude], [lat, lon])
                 return dist <= 300
