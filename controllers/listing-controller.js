@@ -274,7 +274,7 @@ module.exports = (app) => {
     /**
      * Get the property detail for sale
      */
-    app.get(["/sale/p/:slid", "/sale/:location/p/:slid"], (req, res) => {
+    app.get("/sale/p/:slid", (req, res) => {
         // check if db has data for this location
         // if exist, retreieve from db
         // else, retreieve from the zillowApi and store to db
@@ -333,7 +333,7 @@ module.exports = (app) => {
     /**
      * Get the property detail for rent
      */
-    app.get(["/rent/p/:rlid", "/rent/:location/p/:rlid"], (req, res) => {
+    app.get("/rent/p/:rlid", (req, res) => {
         // check if db has data for this location
         // if exist, retreieve from db
         // else, retreieve from the zillowApi and store to db
