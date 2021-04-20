@@ -45,7 +45,7 @@ const findSaleListingsByLocation = (lat, lon, callback) => {
             console.log(`Error from findSaleListingsByLocation : ${err}`)
             callback(err)
         } else {
-            console.log(data)
+            // console.log(data)
             if (data.length === 0) {
                 callback(null, data)
             }
