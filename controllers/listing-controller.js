@@ -7,6 +7,7 @@ const rentalListingDao = require("../services/daos/rental-listing-dao")
 const saleListingDao = require("../services/daos/sale-listing-dao")
 const propertyDao = require("../services/daos/property-dao")
 const propertyTypes = require("../models/property/property-type/property-type-enum")
+const customerService = require("../services/customer-service")
 
 module.exports = (app) => {
 
@@ -70,7 +71,6 @@ module.exports = (app) => {
         })
         .catch(err => res.status(404).send(err.message))
     }
-
 
     /**
      * A helper function to get sale listings close to a specific location
@@ -247,7 +247,55 @@ module.exports = (app) => {
                 return res.status(200).json(data)
         })
     }
+
+    /**
+     * A helper function to find a listing by id
+     * @param {ObjectId} ids 
+     * @param {Response} res 
+     */
+    const findRentalListingsHelper = (ids, res) => {
+        rentalListingDao.findRentalListingsByIds(ids, (err, data) => {
+            if (err)
+                return res.status(404).send(err.message)
+            else
+                return res.status(200).json(data)
+        })
+    }
+
+    /**
+     * A helper function to find a listing by id
+     * @param {ObjectId} ids 
+     * @param {Response} res 
+     */    
+    const findSaleListingsHelper = (ids, res) => {
+        saleListingDao.findSaleListingsByIds(ids, (err, data) => {
+            if (err)
+                return res.status(404).send(err.message)
+            else
+                return res.status(200).json(data)
+        })
+    }
+
+    app.post("/profile/wishlist/rent", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findRentalListingsHelper(ids, res)
+    })
+
+    app.post("/profile/wishlist/sale", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findSaleListingsHelper(ids, res)
+    })
     
+    app.post("/profile/post/rent", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findRentalListingsHelper(ids, res)
+    })
+
+    app.post("/profile/post/sale", (req, res) => {
+        const ids = JSON.parse(JSON.stringify(req.body))
+        findSaleListingsHelper(ids, res)
+    })
+
     /**
      * Get list of properties for sale
      */
@@ -413,21 +461,66 @@ module.exports = (app) => {
 
     app.post("/rent/new", (req, res) => {
         const listing = JSON.parse(JSON.stringify(req.body))
-        rentalListingDao.createRentalListing(listing, (err, data) => {
+        const pid = listing["pid"]
+        rentalListingDao.createRentalListing(listing, (err, newListing) => {
             if (err)
                 return res.status(404).send(err.message)
-            else 
-                return res.status(200).json(data)
+            else {
+                propertyDao.findPropertyById(pid, (err, property) => {
+                    if (err)
+                        return res.status(404).send(err.message)
+                    else {
+                        const uid = property["uid"]
+                        customerService.findCustomerById(uid, (err, customer) => {
+                            if (err)
+                                return res.stauts(404).send(err.message)
+                            else {
+                                if (customer["lenderProfile"] === undefined || customer["lenderProfile"] === null) {
+                                    customer["lenderProfile"] = {}
+                                    customer["lenderProfile"]["postToLend"] = []
+                                    customer["lenderProfile"]["rentalListingResults"] = []
+                                }
+                                
+                                customer["lenderProfile"]["postToLend"].push(newListing._id)
+                                return res.status(200).json(newListing)
+                            }
+                        })
+                    }
+                })
+            }
+                
         })        
     })
 
     app.post("/sale/new", (req, res) => {
         const listing = JSON.parse(JSON.stringify(req.body))
-        saleListingDao.createSaleListing(listing, (err, data) => {
+        const pid = listing["pid"]
+        saleListingDao.createSaleListing(listing, (err, newListing) => {
             if (err)
                 return res.status(404).send(err.message)
-            else 
-                return res.status(200).json(data)
+            else {
+                propertyDao.findPropertyById(pid, (err, property) => {
+                    if (err)
+                        return res.status(404).send(err.message)
+                    else {
+                        const uid = property["uid"]
+                        customerService.findCustomerById(uid, (err, customer) => {
+                            if (err)
+                                return res.stauts(404).send(err.message)
+                            else {
+                                if (customer["sellerProfile"] === undefined || customer["sellerProfile"] === null) {
+                                    customer["sellerProfile"] = {}
+                                    customer["sellerProfile"]["postToSell"] = []
+                                    customer["sellerProfile"]["saleListingResults"] = []
+                                }
+                                customer["sellerProfile"]["postToSell"].push(newListing._id)
+                                return res.status(200).json(newListing)
+                            }
+                        })
+                    }
+                })
+            }
+                
         })        
     })
 
@@ -436,43 +529,5 @@ module.exports = (app) => {
         zillowService.getPropertyDetail({
             zpid
         }).then(data => res.json(data))
-    })
-
-    const findRentalListingsHelper = (ids, res) => {
-        rentalListingDao.findRentalListingsByIds(ids, (err, data) => {
-            if (err)
-                return res.status(404).send(err.message)
-            else
-                return res.status(200).json(data)
-        })
-    }
-
-    const findSaleListingsHelper = (ids, res) => {
-        saleListingDao.findSaleListingsByIds(ids, (err, data) => {
-            if (err)
-                return res.status(404).send(err.message)
-            else
-                return res.status(200).json(data)
-        })
-    }    
-
-    app.post("/profile/wishlist/rent", (req, res) => {
-        const ids = JSON.parse(JSON.stringify(req.body))
-        findRentalListingsHelper(ids, res)
-    })
-
-    app.post("/profile/wishlist/sale", (req, res) => {
-        const ids = JSON.parse(JSON.stringify(req.body))
-        findSaleListingsHelper(ids, res)
-    })
-    
-    app.post("/profile/post/rent", (req, res) => {
-        const ids = JSON.parse(JSON.stringify(req.body))
-        findRentalListingsHelper(ids, res)
-    })
-
-    app.post("/profile/post/sale", (req, res) => {
-        const ids = JSON.parse(JSON.stringify(req.body))
-        findSaleListingsHelper(ids, res)
-    })
+    })    
 }
