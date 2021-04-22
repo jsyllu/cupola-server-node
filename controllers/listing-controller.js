@@ -482,7 +482,12 @@ module.exports = (app) => {
                                 }
                                 
                                 customer["lenderProfile"]["postToLend"].push(newListing._id)
-                                return res.status(200).json(newListing)
+                                customerService.updateCustomer(customer, null, (err, updatedCustomer) => {
+                                    if (err)
+                                        return res.stauts(404).send(err.message)
+                                    else 
+                                        return res.status(200).json(newListing)
+                                })
                             }
                         })
                     }
@@ -514,7 +519,12 @@ module.exports = (app) => {
                                     customer["sellerProfile"]["saleListingResults"] = []
                                 }
                                 customer["sellerProfile"]["postToSell"].push(newListing._id)
-                                return res.status(200).json(newListing)
+                                customerService.updateCustomer(customer, null, (err, updatedCustomer) => {
+                                    if (err)
+                                        return res.stauts(404).send(err.message)
+                                    else 
+                                        return res.status(200).json(newListing)
+                                })
                             }
                         })
                     }
