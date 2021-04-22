@@ -276,21 +276,33 @@ module.exports = (app) => {
         })
     }
 
+    /**
+     * Add a rentalListing to wishList
+     */
     app.post("/profile/wishlist/rent", (req, res) => {
         const ids = JSON.parse(JSON.stringify(req.body))
         findRentalListingsHelper(ids, res)
     })
 
+    /**
+     * Add a saleListing to wishList
+     */
     app.post("/profile/wishlist/sale", (req, res) => {
         const ids = JSON.parse(JSON.stringify(req.body))
         findSaleListingsHelper(ids, res)
     })
     
+    /**
+     * get detals of list of rentalListing by Ids
+     */
     app.post("/profile/post/rent", (req, res) => {
         const ids = JSON.parse(JSON.stringify(req.body))
         findRentalListingsHelper(ids, res)
     })
 
+    /**
+     * get detals of list of saleListing by Ids
+     */    
     app.post("/profile/post/sale", (req, res) => {
         const ids = JSON.parse(JSON.stringify(req.body))
         findSaleListingsHelper(ids, res)
@@ -305,9 +317,6 @@ module.exports = (app) => {
         const address = req.params.location
         // console.log(address)
         getSalePropertiesHelper(address, res)
-        // saleListingDao.findSaleListingsByLocation()
-        // if exist, retreieve from db
-        // else, retreieve from the zillowApi and store to db
     })    
 
     /**
@@ -449,6 +458,9 @@ module.exports = (app) => {
         })        
     })
 
+    /**
+     * Add new property
+     */
     app.post("/property/new", (req, res) => {
         const p = JSON.parse(JSON.stringify(req.body))
         propertyDao.createProperty(p, (err, data) => {
@@ -459,6 +471,9 @@ module.exports = (app) => {
         })
     })
 
+    /**
+     * Add new rental Listing
+     */
     app.post("/rent/new", (req, res) => {
         const listing = JSON.parse(JSON.stringify(req.body))
         const pid = listing["pid"]
@@ -497,6 +512,9 @@ module.exports = (app) => {
         })        
     })
 
+    /**
+     * Add new saleListing
+     */
     app.post("/sale/new", (req, res) => {
         const listing = JSON.parse(JSON.stringify(req.body))
         const pid = listing["pid"]
@@ -534,6 +552,136 @@ module.exports = (app) => {
         })        
     })
 
+    /**
+     * Delete a rentalListing
+     */
+    app.delete("/rent/:rlid", (req, res) => {
+        const rlid = req.params.rlid
+        // get the detail for this rentalListing
+        rentalListingDao.findRentalListingById(rlid, (err, rentalListing) => {
+            if (err)
+                return res.status(404).send(err.message)
+            else {
+                if (rentalListing === undefined || rentalListing === null)
+                    return res.status(404).send("RentalListing not found")
+                // get the uid
+                const uid = rentalListing.pid.uid
+                customerService.findCustomerById(uid, (err, data) => {
+
+                })
+            }
+        })
+    })
+
+    /**
+     * Delete a saleListing
+     */
+    app.delete("sale/p/:slid", (req, res) => {
+        const user = req.session['profile']
+        const id = req.params.slid
+        console.log(user)
+
+        if (user === undefined || user === null)
+            return res.status(404).send("Please login")
+
+        saleListingDao.findSaleListingById(id, (err, listing) => {
+            if (err)
+                return res.stauts(404).send(err.message)
+            
+            if (listing === undefined || listing === null)
+                return res.stauts(404).send("Could not find the listing")
+            
+            if (listing.pid === undefined || listing.pid === null)
+                return res.stauts(404).send("Could not find the property")
+
+            const uid = String(listing.pid.uid)
+            if (uid !== String(user._uid))
+                return res.stauts(404).send("User Id not match")
+            
+            const pid = listing.pid._id
+            customerService.findCustomerById(uid, (err, customer) => {
+                if (err)
+                    return res.status(404).send(err.message)
+                
+                    try {
+                        const postToSell = customer.sellerProfile.postToSell.filter(l => String(l) !== id)
+                        customer.sellerProfile.postToSell = postToSell
+                        
+                        customerService.updateCustomer(customer, (err, updatedCustomer) => {
+                            if (err)
+                                return res.stauts(404).send(err.message)
+                            
+                            propertyDao.deletePropertyById(pid)
+                            .then(val => {
+                                saleListingDao.deleteSaleListingById(id)
+                                .then(val => res.status(200).json(val))
+                                .catch(e => res.status(404).send(e.message))
+                            })
+                            .catch(e => res.status(404).send(e.message))
+                        })
+                    } catch (e) {
+                        return res.status(404).send(e.message)
+                    }
+            })
+        })
+    })
+
+    /**
+     * Delete a rentalListing
+     */
+     app.delete("rent/p/:rlid", (req, res) => {
+        const user = req.session['profile']
+        const id = req.params.rlid
+        console.log(user)
+    
+        if (user === undefined || user === null)
+            return res.status(404).send("Please login")
+        
+        rentalListingDao.findRentalListingById(id, (err, listing) => {
+            if (err)
+                return res.stauts(404).send(err.message)
+            
+            if (listing === undefined || listing === null)
+                return res.stauts(404).send("Could not find the listing")
+            
+            if (listing.pid === undefined || listing.pid === null)
+                return res.stauts(404).send("Could not find the property")
+
+            const uid = String(listing.pid.uid)
+            if (uid !== String(user._uid))
+                return res.stauts(404).send("User Id not match")
+            
+            const pid = listing.pid._id
+            customerService.findCustomerById(uid, (err, customer) => {
+                if (err)
+                    return res.status(404).send(err.message)
+                
+                    try {
+                        const postToLend = customer.lenderProfile.postToLend.filter(l => String(l) !== id)
+                        customer.lenderProfile.postToLend = postToLend
+                        
+                        customerService.updateCustomer(customer, (err, updatedCustomer) => {
+                            if (err)
+                                return res.stauts(404).send(err.message)
+                            
+                            propertyDao.deletePropertyById(pid)
+                            .then(val => {
+                                rentalListingDao.deleteRentalListingById(id)
+                                .then(val => res.status(200).json(val))
+                                .catch(e => res.status(404).send(e.message))
+                            })
+                            .catch(e => res.status(404).send(e.message))
+                        })
+                    } catch (e) {
+                        return res.status(404).send(e.message)
+                    }
+            })
+        })
+    })    
+
+    /**
+     * Test zillow zpi
+     */
     app.get('/zillow/:zpid', (req, res) => {
         const zpid = req.params.zpid
         zillowService.getPropertyDetail({
