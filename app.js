@@ -19,9 +19,10 @@ mongoose.connect(process.env["MONGODB_URI"],
 
 app.use(session({
     secret: 'keyboard cat',
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    // cookie: { secure: true }
+    rolling: true,
+    cookie: { maxAge: 60000000 }
 }))
     
     
@@ -53,7 +54,16 @@ require('./controllers/customer-controller')(app)
 require("./controllers/listing-controller")(app)
 
 app.get("/", (req, res) => {
-    res.send("Hello, Cupola")
+    if (req.session.views) {
+        req.session.views++
+        res.setHeader('Content-Type', 'text/html')
+        res.write('<p>views: ' + req.session.views + '</p>')
+        res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
+        res.end()
+      } else {
+        req.session.views = 1
+        res.end('welcome to the session demo. refresh!')
+      }
 })
 
 app.get("/test", (req, res) => {
