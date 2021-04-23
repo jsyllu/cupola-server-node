@@ -688,9 +688,27 @@ module.exports = (app) => {
         rentalListingDao.updateRentalListingById(id, listing, (err, data) => {
             if (err)
                 return res.status(404).send(err.message)
+            console.log("PUT rentalListing")
+            console.log(data)                
             return res.status(200).send(data)
         })
     })
+
+    /**
+     * Update the saleListing
+     */
+     app.put("sale/p/:slid", (req, res) => {
+        const listing = JSON.parse(JSON.stringify(req.body))
+        const id = req.params.slid
+        saleListingDao.updateSaleListingById(id, listing, (err, data) => {
+            if (err)
+                return res.status(404).send(err.message)
+            console.log("PUT saleListing")
+            console.log(data)
+            return res.status(200).send(data)
+        })
+    })    
+
 
     /**
      * Test zillow zpi
