@@ -677,7 +677,20 @@ module.exports = (app) => {
                     }
             })
         })
-    })    
+    })
+
+    /**
+     * Update the rentalListing
+     */
+    app.put("rent/p/:rlid", (req, res) => {
+        const listing = JSON.parse(JSON.stringify(req.body))
+        const id = req.params.rlid
+        rentalListingDao.updateRentalListingById(id, listing, (err, data) => {
+            if (err)
+                return res.status(404).send(err.message)
+            return res.status(200).send(data)
+        })
+    })
 
     /**
      * Test zillow zpi
