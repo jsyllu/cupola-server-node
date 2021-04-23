@@ -614,7 +614,7 @@ module.exports = (app) => {
                             propertyDao.deletePropertyById(pid)
                             .then(val => {
                                 saleListingDao.deleteSaleListingById(id)
-                                .then(val => res.status(200).json(val))
+                                .then(val => res.status(200).json(updatedCustomer))
                                 .catch(e => res.status(404).send(e.message))
                             })
                             .catch(e => res.status(404).send(e.message))
@@ -667,7 +667,7 @@ module.exports = (app) => {
                             propertyDao.deletePropertyById(pid)
                             .then(val => {
                                 rentalListingDao.deleteRentalListingById(id)
-                                .then(val => res.status(200).json(val))
+                                .then(val => res.status(200).json(updatedCustomer))
                                 .catch(e => res.status(404).send(e.message))
                             })
                             .catch(e => res.status(404).send(e.message))
