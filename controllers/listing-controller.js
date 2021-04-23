@@ -576,7 +576,7 @@ module.exports = (app) => {
     /**
      * Delete a saleListing
      */
-    app.delete("sale/p/:slid", (req, res) => {
+    app.delete("/sale/p/:slid", (req, res) => {
         const user = req.session['profile']
         const id = req.params.slid
         console.log(user)
@@ -629,7 +629,7 @@ module.exports = (app) => {
     /**
      * Delete a rentalListing
      */
-     app.delete("rent/p/:rlid", (req, res) => {
+     app.delete("/rent/p/:rlid", (req, res) => {
         const user = req.session['profile']
         const id = req.params.rlid
         console.log(user)
@@ -682,7 +682,7 @@ module.exports = (app) => {
     /**
      * Update the rentalListing
      */
-    app.put("rent/p/:rlid", (req, res) => {
+    app.put("/rent/p/:rlid", (req, res) => {
         const listing = JSON.parse(JSON.stringify(req.body))
         const id = req.params.rlid
         rentalListingDao.updateRentalListingById(id, listing, (err, data) => {
@@ -697,7 +697,7 @@ module.exports = (app) => {
     /**
      * Update the saleListing
      */
-     app.put("sale/p/:slid", (req, res) => {
+     app.put("/sale/p/:slid", (req, res) => {
         const listing = JSON.parse(JSON.stringify(req.body))
         const id = req.params.slid
         saleListingDao.updateSaleListingById(id, listing, (err, data) => {
